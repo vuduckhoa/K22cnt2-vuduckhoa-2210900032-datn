@@ -1,0 +1,68 @@
+@model IEnumerable<ClothesWebNET.Models.News>
+@{
+    ViewBag.Title = "Bản tin";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content" class="">
+    <div class="content-main p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Bản tin</li>
+                <li class="breadcrumb-item active" aria-current="page">Danh sách</li>
+            </ol>
+        </nav>
+
+        @if (ViewBag.NewsError != null)
+        {
+            <div class="alert alert-danger">
+                Không load được bản tin: @ViewBag.NewsError
+                <div style="margin-top:6px;">
+                    Gợi ý: chạy script <code>Scripts/CreateNewsTables.sql</code> để tạo bảng <code>News</code>, <code>NewsSection</code>.
+                </div>
+            </div>
+        }
+
+        <div class="d-flex p-2 justify-content-end">
+            <a class="btn btn-primary" href="/Admin/News/Create">Thêm bản tin</a>
+        </div>
+
+        <div class="table-responsive-sm">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Ảnh</th>
+                        <th>Tựa đề</th>
+                        <th>Tác giả</th>
+                        <th>Ngày tạo</th>
+                        <th>Cập nhật</th>
+                        <th style="width: 200px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="width:90px;">
+                                @if (!string.IsNullOrWhiteSpace(item.coverImageUrl))
+                                {
+                                    <img src="@item.coverImageUrl" style="width:70px;height:50px;object-fit:cover;border-radius:6px;border:1px solid rgba(0,0,0,0.08);" />
+                                }
+                            </td>
+                            <td>@item.title</td>
+                            <td>@item.authorName</td>
+                            <td>@item.createdAt.ToString("dd/MM/yyyy")</td>
+                            <td>@(item.updatedAt.HasValue ? item.updatedAt.Value.ToString("dd/MM/yyyy") : "")</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" href="/Admin/News/Edit/@item.idNews">Sửa</a>
+                                <a class="btn btn-sm btn-outline-danger" href="/Admin/News/Delete/@item.idNews">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

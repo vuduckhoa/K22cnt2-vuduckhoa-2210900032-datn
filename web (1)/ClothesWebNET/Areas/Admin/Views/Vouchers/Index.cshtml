@@ -1,0 +1,53 @@
+@model IEnumerable<ClothesWebNET.Models.Voucher>
+@{
+    ViewBag.Title = "Vouchers";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content" class="">
+    <div class="content-main p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Voucher</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Danh sách voucher
+                </li>
+            </ol>
+        </nav>
+
+        <div class="d-flex p-2 justify-content-end">
+            <a class="btn btn-primary" href="/Admin/Vouchers/Create">Thêm voucher</a>
+        </div>
+
+        <div class="table-responsive-sm">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Giảm (%)</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th style="width: 180px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.idVoucher</td>
+                            <td>@item.percent</td>
+                            <td>@item.dateStart.ToString("yyyy-MM-dd")</td>
+                            <td>@item.dateEnd.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                <a class="btn btn-sm btn-outline-primary" href="/Admin/Vouchers/Edit/@item.idVoucher">Sửa</a>
+                                <a class="btn btn-sm btn-outline-danger" href="/Admin/Vouchers/Delete/@item.idVoucher">Xóa</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+

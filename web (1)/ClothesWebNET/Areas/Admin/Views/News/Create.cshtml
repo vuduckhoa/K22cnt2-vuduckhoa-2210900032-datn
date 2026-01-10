@@ -1,0 +1,133 @@
+@{
+    ViewBag.Title = "Thêm bản tin";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var sections = ViewBag.Sections as List<ClothesWebNET.Models.NewsSection> ?? new List<ClothesWebNET.Models.NewsSection>();
+}
+
+<div id="content" class="">
+    <div class="content-main p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Admin/News">Bản tin</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thêm</li>
+            </ol>
+        </nav>
+
+        @if (ViewBag.NewsError != null)
+        {
+            <div class="alert alert-danger">Lỗi: @ViewBag.NewsError</div>
+        }
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row g-3">
+                <div class="col-md-12">
+                    <label class="form-label">Tựa đề</label>
+                    <input class="form-control" name="title" value="@(Request["title"] ?? "")" />
+                    @Html.ValidationMessage("title", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Tên tác giả (hiển thị cuối bản tin)</label>
+                    <input class="form-control" name="authorName" value="@(Request["authorName"] ?? "")" />
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Ảnh chính (hiển thị ở trang danh sách)</label>
+                    <input class="form-control" type="file" name="coverImage" accept="image/*" />
+                </div>
+
+                <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 style="margin:0;">Các mục lớn</h5>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="addSection">+ Thêm mục</button>
+                    </div>
+                    @Html.ValidationMessage("sections", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-12" id="sections">
+                    @if (sections.Count == 0)
+                    {
+                        sections.Add(new ClothesWebNET.Models.NewsSection { heading = "", content = "" });
+                    }
+
+                    @for (int i = 0; i < sections.Count; i++)
+                    {
+                        <div class="card mb-3 section-item">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <b>Mục @(i + 1)</b>
+                                    <button type="button" class="btn btn-sm btn-outline-danger removeSection">Xóa</button>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Tiêu đề mục</label>
+                                    <input class="form-control" name="sectionHeading" value="@sections[i].heading" />
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Ảnh trong mục (tuỳ chọn)</label>
+                                    <input class="form-control" type="file" name="sectionImages" accept="image/*" />
+                                </div>
+                                <div>
+                                    <label class="form-label">Nội dung</label>
+                                    <textarea class="form-control" name="sectionContent" rows="5">@sections[i].content</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                    <a class="btn btn-secondary" href="/Admin/News">Hủy</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/admin/jquery")
+<script>
+    function newSectionCard(index) {
+        return `
+<div class="card mb-3 section-item">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <b>Mục ${index}</b>
+      <button type="button" class="btn btn-sm btn-outline-danger removeSection">Xóa</button>
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Tiêu đề mục</label>
+      <input class="form-control" name="sectionHeading" value="" />
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Ảnh trong mục (tuỳ chọn)</label>
+      <input class="form-control" type="file" name="sectionImages" accept="image/*" />
+    </div>
+    <div>
+      <label class="form-label">Nội dung</label>
+      <textarea class="form-control" name="sectionContent" rows="5"></textarea>
+    </div>
+  </div>
+</div>`;
+    }
+
+    function renumber() {
+        $('#sections .section-item').each(function (i) {
+            $(this).find('b').first().text('Mục ' + (i + 1));
+        });
+    }
+
+    $('#addSection').on('click', function () {
+        const idx = $('#sections .section-item').length + 1;
+        $('#sections').append(newSectionCard(idx));
+    });
+
+    $(document).on('click', '.removeSection', function () {
+        $(this).closest('.section-item').remove();
+        renumber();
+    });
+</script>
+
+

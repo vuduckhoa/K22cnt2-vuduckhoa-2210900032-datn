@@ -1,0 +1,37 @@
+@model ClothesWebNET.Models.News
+@{
+    ViewBag.Title = "Xóa bản tin";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content" class="">
+    <div class="content-main p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Admin/News">Bản tin</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Xóa</li>
+            </ol>
+        </nav>
+
+        <div class="alert alert-warning">
+            Bạn có chắc chắn muốn xóa bản tin: <b>@Model.title</b> ?
+        </div>
+
+        <dl class="row">
+            <dt class="col-sm-3">Tác giả</dt>
+            <dd class="col-sm-9">@Model.authorName</dd>
+            <dt class="col-sm-3">Ngày tạo</dt>
+            <dd class="col-sm-9">@Model.createdAt.ToString("dd/MM/yyyy")</dd>
+        </dl>
+
+        @using (Html.BeginForm("DeleteConfirmed", "News", new { area = "Admin" }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="idNews" value="@Model.idNews" />
+            <button type="submit" class="btn btn-danger">Xóa</button>
+            <a class="btn btn-secondary" href="/Admin/News">Hủy</a>
+        }
+    </div>
+</div>
+
+

@@ -1,0 +1,109 @@
+@model ClothesWebNET.Models.NewsDetailVM
+@{
+    ViewBag.Title = Model != null && Model.News != null ? Model.News.title : "Bản tin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Styles.Render("~/Content/main")
+
+@{
+    var coverRaw = Model != null && Model.News != null ? (Model.News.coverImageUrl ?? "") : "";
+    var coverSrc = "";
+    if (!string.IsNullOrWhiteSpace(coverRaw))
+    {
+        coverRaw = coverRaw.Trim();
+        if (coverRaw.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+        {
+            coverSrc = coverRaw;
+        }
+        else if (coverRaw.StartsWith("~/"))
+        {
+            coverSrc = Url.Content(coverRaw);
+        }
+        else if (coverRaw.StartsWith("/"))
+        {
+            coverSrc = Url.Content("~" + coverRaw);
+        }
+        else
+        {
+            coverSrc = Url.Content("~/" + coverRaw);
+        }
+    }
+}
+
+<style>
+    .news-container { margin-top: 160px; }
+    .article { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 20px; }
+    .article-cover { width: 100%; max-height: 260px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); margin-top: 14px; }
+    .article-title { font-size: 28px; font-weight: 800; line-height: 1.2; color: #050505; }
+    .article-meta { margin-top: 8px; color: #6b7280; font-size: 12px; }
+    .article-section { margin-top: 18px; }
+    .article-h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .article-img { width: 100%; max-width: 720px; max-height: 360px; display: block; border-radius: 12px; border: 1px solid rgba(0,0,0,0.08); margin: 10px auto; object-fit: cover; }
+    .article-content { font-size: 14px; line-height: 1.8; white-space: pre-line; }
+    .article-author { margin-top: 22px; text-align: right; font-weight: 700; font-style: italic; font-size: 14px; }
+</style>
+
+<div class="container news-container">
+    <div class="breadcrumb">
+        <div class="grid">
+            <a href="/">Trang chủ / </a>
+            <a href="/News">Bản tin / </a>
+            <span class="br-main">@Model.News.title</span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="article">
+            <div class="article-title">@Model.News.title</div>
+            <div class="article-meta">
+                @(Model.News.updatedAt.HasValue ? Model.News.updatedAt.Value.ToString("dd/MM/yyyy") : Model.News.createdAt.ToString("dd/MM/yyyy"))
+            </div>
+            @if (Model.Sections != null)
+            {
+                foreach (var s in Model.Sections.OrderBy(x => x.sortOrder))
+                {
+                    var sectionImgRaw = (s.imageUrl ?? "").Trim();
+                    var sectionImgSrc = "";
+                    if (!string.IsNullOrWhiteSpace(sectionImgRaw))
+                    {
+                        if (sectionImgRaw.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sectionImgSrc = sectionImgRaw;
+                        }
+                        else if (sectionImgRaw.StartsWith("~/"))
+                        {
+                            sectionImgSrc = Url.Content(sectionImgRaw);
+                        }
+                        else if (sectionImgRaw.StartsWith("/"))
+                        {
+                            sectionImgSrc = Url.Content("~" + sectionImgRaw);
+                        }
+                        else
+                        {
+                            sectionImgSrc = Url.Content("~/" + sectionImgRaw);
+                        }
+                    }
+                    <div class="article-section">
+                        @if (!string.IsNullOrWhiteSpace(s.heading))
+                        {
+                            <div class="article-h2">@s.heading</div>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(sectionImgSrc))
+                        {
+                            <img class="article-img" src="@sectionImgSrc" alt="@s.heading" />
+                        }
+                        <div class="article-content">@s.content</div>
+                    </div>
+                }
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.News.authorName))
+            {
+                <div class="article-author">@Model.News.authorName</div>
+            }
+        </div>
+    </div>
+</div>
+
+

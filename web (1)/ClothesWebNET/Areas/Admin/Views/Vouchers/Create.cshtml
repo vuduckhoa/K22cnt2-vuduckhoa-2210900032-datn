@@ -1,0 +1,52 @@
+@model ClothesWebNET.Models.Voucher
+@{
+    ViewBag.Title = "Create Voucher";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content" class="">
+    <div class="content-main p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Admin/Vouchers">Voucher</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thêm voucher</li>
+            </ol>
+        </nav>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Mã voucher</label>
+                    @Html.TextBoxFor(m => m.idVoucher, new { @class = "form-control", placeholder = "VD: SALE10 (để trống sẽ tự tạo VC...)" })
+                    @Html.ValidationMessageFor(m => m.idVoucher, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Giảm (%)</label>
+                    @Html.TextBoxFor(m => m.percent, new { @class = "form-control", placeholder = "VD: 10" })
+                    @Html.ValidationMessageFor(m => m.percent, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Ngày bắt đầu</label>
+                    @Html.TextBoxFor(m => m.dateStart, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(m => m.dateStart, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Ngày kết thúc</label>
+                    @Html.TextBoxFor(m => m.dateEnd, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                    @Html.ValidationMessageFor(m => m.dateEnd, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary" type="submit">Lưu</button>
+                    <a class="btn btn-secondary" href="/Admin/Vouchers">Hủy</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+

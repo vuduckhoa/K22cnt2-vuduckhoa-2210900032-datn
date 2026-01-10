@@ -1,0 +1,38 @@
+@model ClothesWebNET.Models.Voucher
+@{
+    ViewBag.Title = "Delete Voucher";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content" class="">
+    <div class="content-main p-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Admin/Vouchers">Voucher</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Xóa voucher</li>
+            </ol>
+        </nav>
+
+        <div class="alert alert-warning">
+            Bạn có chắc chắn muốn xóa voucher <b>@Model.idVoucher</b>?
+        </div>
+
+        <dl class="row">
+            <dt class="col-sm-3">Giảm (%)</dt>
+            <dd class="col-sm-9">@Model.percent</dd>
+            <dt class="col-sm-3">Ngày bắt đầu</dt>
+            <dd class="col-sm-9">@Model.dateStart.ToString("yyyy-MM-dd")</dd>
+            <dt class="col-sm-3">Ngày kết thúc</dt>
+            <dd class="col-sm-9">@Model.dateEnd.ToString("yyyy-MM-dd")</dd>
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger">Xóa</button>
+            <a class="btn btn-secondary" href="/Admin/Vouchers">Hủy</a>
+        }
+    </div>
+</div>
+
+
