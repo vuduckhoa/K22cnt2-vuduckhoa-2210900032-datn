@@ -9,9 +9,26 @@ namespace ClothesWebNET.Controllers
     {
         private readonly CLOTHESEntities db = new CLOTHESEntities();
 
+        private string GetCurrentUserId()
+        {
+            if (Session["USER_SESSION"] == null)
+            {
+                return null;
+            }
+
+            var cookie = Request.Cookies["user"];
+            if (cookie == null || string.IsNullOrWhiteSpace(cookie.Value))
+            {
+                return null;
+            }
+
+            return cookie.Value;
+        }
+
         [HttpGet]
         public JsonResult Available()
         {
+            // Cho phép tất cả người dùng (kể cả chưa đăng nhập) xem danh sách voucher
             var now = DateTime.Now;
             var list = db.Vouchers
                 .Where(v => v.dateStart <= now && v.dateEnd >= now)
@@ -30,6 +47,13 @@ namespace ClothesWebNET.Controllers
         [HttpPost]
         public JsonResult Apply(string idVoucher, int total)
         {
+            // Kiểm tra đăng nhập trước
+            var userId = GetCurrentUserId();
+            if (userId == null)
+            {
+                return Json(new { ok = false, requiresLogin = true, message = "Bạn cần đăng nhập để sử dụng voucher." });
+            }
+
             if (string.IsNullOrWhiteSpace(idVoucher))
             {
                 return Json(new { ok = false, message = "Vui lòng nhập mã voucher." });

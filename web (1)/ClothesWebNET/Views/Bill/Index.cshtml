@@ -107,6 +107,39 @@
                             </div>
                         </div>
 
+                        @{
+                            bool isLoggedIn = Session["USER_SESSION"] != null && Request.Cookies["user"] != null;
+                        }
+                        <div class="payment-method form-item">
+                            <div class="form-control">
+                                <label style="font-weight: 600; margin-bottom: 8px; display: block;">Phương thức thanh toán:</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <label style="flex:1; text-align:center; padding:10px 0; border:1px solid #dadbdd; border-radius:6px; cursor:pointer; background:#fff;">
+                                        <input type="radio" name="paymentMethod" value="Chuyen Khoan" checked style="display:none;" />
+                                        Chuyển khoản
+                                    </label>
+                                    @if (isLoggedIn)
+                                    {
+                                        <label style="flex:1; text-align:center; padding:10px 0; border:1px solid #dadbdd; border-radius:6px; cursor:pointer; background:#fff;">
+                                            <input type="radio" name="paymentMethod" value="Tien Mat" style="display:none;" />
+                                            Tiền mặt
+                                        </label>
+                                    }
+                                </div>
+
+                            </div>
+                            <div id="qrCodeContainer" style="margin-top: 16px; display: none; text-align: center; padding: 16px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; background: #f9f9f9;">
+                                <div style="margin-bottom: 12px; font-weight: 600;">Quét mã QR để thanh toán</div>
+                                <img id="qrCodeImage" src="" alt="QR Code" style="max-width: 250px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;" />
+                                <div style="margin-top: 12px; font-size: 13px; color: #666;">
+                                    <div><strong>Số tài khoản:</strong> <span id="qrBankAccount"></span></div>
+                                    <div><strong>Ngân hàng:</strong> <span id="qrBankName"></span></div>
+                                    <div><strong>Chủ tài khoản:</strong> <span id="qrAccountName"></span></div>
+                                    <div><strong>Số tiền:</strong> <span id="qrAmount"></span></div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="pay form-item">
                             <a href="/cart" class="cart">Giỏ hàng</a>
                             <button type="button" class="btnPay" id="save_btn">

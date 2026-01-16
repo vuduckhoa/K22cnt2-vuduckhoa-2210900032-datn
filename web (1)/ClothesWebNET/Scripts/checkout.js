@@ -158,11 +158,19 @@ function calcBaseTotal() {
 // Initialize totals UI once (base total)
 updateTotalsUI(calcBaseTotal());
 
-// Load available vouchers at checkout
+// Load available vouchers at checkout (only if logged in)
 fetch('/Voucher/Available')
     .then(r => r.json())
-    .then(res => renderVoucherList(res.items))
-    .catch(() => { /* ignore */ });
+    .then(res => {
+        if (res && res.items) {
+            renderVoucherList(res.items);
+        } else {
+            renderVoucherList([]);
+        }
+    })
+    .catch(() => { 
+        renderVoucherList([]);
+    });
 
 // Choose voucher from list -> fill input
 $(document).on('click', '#voucherList [data-code]', function () {
@@ -182,6 +190,14 @@ $('#applyVoucher').click(() => {
     })
         .then(r => r.json())
         .then(res => {
+            // Kiểm tra nếu cần đăng nhập
+            if (res && res.requiresLogin) {
+                if (confirm('Bạn cần đăng nhập để sử dụng voucher. Bạn có muốn chuyển đến trang đăng nhập không?')) {
+                    window.location.href = '/login';
+                }
+                return;
+            }
+
             if (!res || !res.ok) {
                 alert(res && res.message ? res.message : 'Không áp dụng được voucher.');
                 appliedVoucherId = null;
@@ -195,10 +211,80 @@ $('#applyVoucher').click(() => {
             appliedDiscount = Number(res.discount || 0);
             appliedNewTotal = Number(res.newTotal || baseTotal);
             updateTotalsUI(baseTotal);
+            
+            // Reload QR code if bank transfer is selected
+            if ($('input[name="paymentMethod"]:checked').val() === 'Chuyen Khoan') {
+                loadQRCode();
+            }
         })
         .catch(() => {
             alert('Không áp dụng được voucher. Vui lòng thử lại.');
         });
+});
+
+// Payment method selection handler
+function loadQRCode() {
+    const finalTotal = (appliedNewTotal !== null ? appliedNewTotal : calcBaseTotal());
+    const qrContainer = document.getElementById('qrCodeContainer');
+    if (!qrContainer) return;
+
+    // Hiển thị container ngay (có thể hiển thị loading state)
+    qrContainer.style.display = 'block';
+    
+    fetch(`/Payment/GenerateQRCode?amount=${finalTotal}&content=Thanh toan don hang`)
+        .then(r => r.json())
+        .then(res => {
+            if (res && res.success) {
+                document.getElementById('qrCodeImage').src = res.qrCodeUrl;
+                document.getElementById('qrBankAccount').textContent = res.bankAccount;
+                document.getElementById('qrBankName').textContent = res.bankName;
+                document.getElementById('qrAccountName').textContent = res.accountName;
+                document.getElementById('qrAmount').textContent = formatMoneyThousand(finalTotal);
+            } else {
+                qrContainer.style.display = 'none';
+                console.error('Failed to generate QR code');
+            }
+        })
+        .catch((error) => {
+            console.error('Failed to load QR code:', error);
+            qrContainer.style.display = 'none';
+        });
+}
+
+// Handle payment method change
+$(document).on('change', 'input[name="paymentMethod"]', function() {
+    const selectedMethod = $(this).val();
+    const qrContainer = document.getElementById('qrCodeContainer');
+    
+    if (selectedMethod === 'Chuyen Khoan') {
+        loadQRCode();
+    } else {
+        if (qrContainer) {
+            qrContainer.style.display = 'none';
+        }
+    }
+});
+
+// Load QR code on page load if bank transfer is selected by default
+$(document).ready(function() {
+    // Đợi một chút để đảm bảo DOM đã load xong và các script khác đã chạy
+    setTimeout(function() {
+        const selectedMethod = $('input[name="paymentMethod"]:checked').val();
+        if (selectedMethod === 'Chuyen Khoan') {
+            loadQRCode();
+        }
+    }, 300);
+});
+
+// Cũng thử load khi window load xong (sau khi tất cả resources đã load)
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        const selectedMethod = $('input[name="paymentMethod"]:checked').val();
+        const qrContainer = document.getElementById('qrCodeContainer');
+        if (selectedMethod === 'Chuyen Khoan' && qrContainer && qrContainer.style.display === 'none') {
+            loadQRCode();
+        }
+    }, 100);
 });
 
 function uuidv4() {
@@ -242,13 +328,16 @@ $('#save_btn').click(() => {
             dsChiTietDH.push(ctdh);
         })
 
+        // Get selected payment method
+        const selectedPaymentMethod = $('input[name="paymentMethod"]:checked').val() || 'Chuyen Khoan';
+        
         const idUser = null;
         const customData = {
             idBill: idBill,
             idUser: idUser !== null ? idUser : null,
             Shipping: 50,
             Total: total,
-            PTTT: "Tien Mat",
+            PTTT: selectedPaymentMethod,
             status: 0,
             detailBill: dsChiTietDH
         }
@@ -273,7 +362,7 @@ $('#save_btn').click(() => {
                 email: email.value,
                 phone: dienthoai,
                 address: diachi,
-                PTTT: "Tien Mat",
+                PTTT: selectedPaymentMethod,
                 detailBill: dsChiTietDH,
                 status: false,
                 idVoucher: appliedVoucherId,
