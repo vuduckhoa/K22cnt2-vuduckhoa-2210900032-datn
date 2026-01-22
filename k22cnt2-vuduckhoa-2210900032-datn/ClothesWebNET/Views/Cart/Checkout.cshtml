@@ -29,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
           rel="stylesheet" />
-    <title>ZOMBIE® OFFICIAL STORE - Thanh toán đơn hàng</title>
+    <title>DucwK® OFFICIAL STORE - Thanh toán đơn hàng</title>
     @Styles.Render("~/Content/base")
     @Styles.Render("~/Content/checkout")
     @Styles.Render("~/Content/footer")
@@ -40,13 +40,12 @@
 
 
 
-
     <div class="main">
         <div class="grid">
             <div class="checkout">
                 <div class="checkout-info">
                     <div class="checkout-logo-text checkout-item">
-                        <a style="color:#000000" href="/"> ZOMBIE® OFFICIAL STORE</a>
+                        DucwK® OFFICIAL STORE
                     </div>
                     <ul class="checkout-breadcrumb checkout-item">
                         <li class="breadcrumb-item">
@@ -57,10 +56,14 @@
                             <span class="text-link">Thông tin giao hàng</span>
                             <i class="icon-link bx bx-chevron-right"></i>
                         </li>
-                       
+                        <li class="breadcrumb-item">
+                            <a href="" class="cart text-link"> Phương thức thanh toán </a>
+                        </li>
                     </ul>
                     <div class="checkout-text checkout-item">Thông tin giao hàng</div>
-                  
+                    <div class="back-login checkout-item">
+                        Bạn đã có tài khoản? <a href="/login" class="login">Đăng nhập</a>
+                    </div>
                     <!-- <form  class="form-info checkout-item">-->
                     <div class="form-info checkout-item">
                         <div class="form-control form-item">
@@ -113,20 +116,19 @@
                         <div class="payment-method form-item">
                             <div class="form-control">
                                 <label style="font-weight: 600; margin-bottom: 8px; display: block;">Phương thức thanh toán:</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <label style="flex:1; text-align:center; padding:10px 0; border:1px solid #dadbdd; border-radius:6px; cursor:pointer; background:#fff;">
-                                        <input type="radio" name="paymentMethod" value="Chuyen Khoan" checked style="display:none;" />
-                                        Chuyển khoản
+                                <div style="display: flex; flex-direction: column; gap: 8px;">
+                                    <label style="display: flex; align-items: center; cursor: pointer; padding: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
+                                        <input type="radio" name="paymentMethod" value="Chuyen Khoan" checked style="margin-right: 8px;" />
+                                        <span>Chuyển khoản ngân hàng (QR Code)</span>
                                     </label>
                                     @if (isLoggedIn)
                                     {
-                                        <label style="flex:1; text-align:center; padding:10px 0; border:1px solid #dadbdd; border-radius:6px; cursor:pointer; background:#fff;">
-                                            <input type="radio" name="paymentMethod" value="Tien Mat" style="display:none;" />
-                                            Tiền mặt
+                                        <label style="display: flex; align-items: center; cursor: pointer; padding: 8px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px;">
+                                            <input type="radio" name="paymentMethod" value="Tien Mat" style="margin-right: 8px;" />
+                                            <span>Thanh toán tiền mặt khi nhận hàng</span>
                                         </label>
                                     }
                                 </div>
-
                             </div>
                             <div id="qrCodeContainer" style="margin-top: 16px; display: none; text-align: center; padding: 16px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; background: #f9f9f9;">
                                 <div style="margin-bottom: 12px; font-weight: 600;">Quét mã QR để thanh toán</div>
@@ -147,91 +149,91 @@
                             </button>
                         </div>
                     </div>
-
+                  
                     <!--     </form>  -->
                 </div>
-                <div class="checkout-bill">
-                    <div class="checkout-product" id="detailProduct">
+                    <div class="checkout-bill">
+                        <div class="checkout-product" id="detailProduct">
 
 
-                    </div>
-                    <div class="payment">
-                        <div class="voucher">
-                            <input id="voucherCode" type="text" placeholder="Mã giảm giá" />
-                            <button type="button" class="btnVoucher" id="applyVoucher">Sử dụng</button>
                         </div>
-                        <div id="voucherList" style="margin-top:12px;"></div>
-                        <div class="payment-money">
-                            <div class="total">
-                                <div class="total-text">Tạm tính:</div>
-                                <div class="total-text total-money" id="tamTinh">0₫</div>
+                        <div class="payment">
+                            <div class="voucher">
+                                <input id="voucherCode" type="text" placeholder="Mã giảm giá" />
+                                <button type="button" class="btnVoucher" id="applyVoucher">Sử dụng</button>
                             </div>
-                            <div class="total" id="voucherRow" style="display:none;">
-                                <div class="total-text">Giảm giá:</div>
-                                <div class="total-text total-money" id="voucherDiscount">0₫</div>
+                            <div id="voucherList" style="margin-top:12px;"></div>
+                            <div class="payment-money">
+                                <div class="total">
+                                    <div class="total-text">Tạm tính:</div>
+                                    <div class="total-text total-money" id="tamTinh">0₫</div>
+                                </div>
+                                <div class="total" id="voucherRow" style="display:none;">
+                                    <div class="total-text">Giảm giá:</div>
+                                    <div class="total-text total-money" id="voucherDiscount">0₫</div>
+                                </div>
+                                <div class="total">
+                                    <div class="total-text">Phí vận chuyển:</div>
+                                    <div class="total-text total-money">0</div>
+                                </div>
                             </div>
-                            <div class="total">
-                                <div class="total-text">Phí vận chuyển:</div>
-                                <div class="total-text total-money">50,000 VND</div>
+                            <div class="payment-total total">
+                                <div class="total-text">Tổng cộng:</div>
+                                <div class="total-text total-money" id="totalMoney" >0₫</div>
                             </div>
-                        </div>
-                        <div class="payment-total total">
-                            <div class="total-text">Tổng cộng:</div>
-                            <div class="total-text total-money" id="totalMoney">0₫</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <footer class="footer">
-        <div class="footer-top">
-            <div class="grid">
-                <div class="footer-news">
-                    <i class="footer-top-icon bx bx-mail-send"></i>Đăng kí nhận tin
-                </div>
+        <footer class="footer">
+            <div class="footer-top">
+                <div class="grid">
+                    <div class="footer-news">
+                        <i class="footer-top-icon bx bx-mail-send"></i>Đăng kí nhận tin
+                    </div>
 
-                <div class="footer-form-news">
-                    <input type="text"
-                           placeholder="Nhập email của bạn"
-                           class="send-mail" />
-                    <button type="submit" class="btn-sendmail">Đăng ký</button>
-                </div>
-                <div class="footer-contact">
-                    <i class="footer-top-icon bx bxs-phone"></i> Hỗ trợ / Mua hàng
-                    0924989342
+                    <div class="footer-form-news">
+                        <input type="text"
+                               placeholder="Nhập email của bạn"
+                               class="send-mail" />
+                        <button type="submit" class="btn-sendmail">Đăng ký</button>
+                    </div>
+                    <div class="footer-contact">
+                        <i class="footer-top-icon bx bxs-phone"></i> Hỗ trợ / Mua hàng
+                        0924989342
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="footer-mid"></div>
-        <div class="footer-bot"></div>
-    </footer>
+            <div class="footer-mid"></div>
+            <div class="footer-bot"></div>
+        </footer>
 
-    @Scripts.RenderFormat("<script src='{0}' type='module'></script>", "~/bundles/checkout")
-
-
-
-</body>
-</html>
-
-<script>
-    const listCart = JSON.parse(window.localStorage.getItem('cart'));
-    let totalMoney = document.getElementById('totalMoney');
-    let tamTinh = document.getElementById('tamTinh');
-    let render = document.getElementById('detailProduct');
-    let total = 0
-    function renderTableLeft(dataList) {
-        $(document).ready(() => {
-            let str = ''
-
-            let count = 0;
-            dataList.forEach((el, index) => {
-                count++
-                let intoMoney = Number(el['price']) * Number(el['amount'])
+       @Scripts.RenderFormat("<script src='{0}' type='module'></script>", "~/bundles/checkout")
 
 
 
-                let bodyCart = `
+    </body>
+    </html>
+
+    <script>
+        const listCart = JSON.parse(window.localStorage.getItem('cart'));
+        let totalMoney = document.getElementById('totalMoney');
+        let tamTinh = document.getElementById('tamTinh');
+        let render = document.getElementById('detailProduct');
+        let total = 0
+        function renderTableLeft(dataList) {
+            $(document).ready(() => {
+                let str = ''
+
+                let count = 0;
+                dataList.forEach((el, index) => {
+                    count++
+                    let intoMoney = Number(el['price']) * Number(el['amount'])
+
+
+
+                    let bodyCart = `
                     <div class="product-item">
                                 <div class="item-img">
                                     <img src='${el['img']}'
@@ -252,23 +254,19 @@
                                 </div>
                             </div>
                 `
-                total += intoMoney
-                str += bodyCart
+                    total += intoMoney
+                    str += bodyCart
+                })
+
+                totalMoney.innerHTML = total.toLocaleString() + ",000VND";
+                tamTinh.innerHTML = total.toLocaleString() + ",000VND";
+                render.innerHTML = str;
+
+
+
+
             })
-
-         
-
-            let m = parseInt(total.toLocaleString().split('.').join('')) + 50;
-           @* console.log(m)*@
-            totalMoney.innerHTML = m.toLocaleString() + ",000VND";
-            tamTinh.innerHTML = total.toLocaleString() + ",000VND";
-            render.innerHTML = str;
-
-
-
-
-        })
-    }
-    renderTableLeft(listCart);
-</script>
+        }
+        renderTableLeft(listCart);
+    </script>
 

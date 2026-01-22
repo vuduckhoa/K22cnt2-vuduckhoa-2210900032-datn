@@ -16,9 +16,9 @@ namespace ClothesWebNET.Controllers
         public JsonResult GenerateQRCode(decimal amount, string content = "")
         {
             // Đọc thông tin tài khoản ngân hàng từ Web.config
-            var bankAccount = ConfigurationManager.AppSettings["BankAccount"] ?? "0924989342";
-            var bankName = ConfigurationManager.AppSettings["BankName"] ?? "Vietcombank";
-            var accountName = ConfigurationManager.AppSettings["BankAccountName"] ?? "ZOMBIE OFFICIAL STORE";
+            var bankAccount = ConfigurationManager.AppSettings["BankAccount"] ?? "270820004";
+            var bankName = ConfigurationManager.AppSettings["BankName"] ?? "MBBank";
+            var accountName = ConfigurationManager.AppSettings["BankAccountName"] ?? "DucK OFFICIAL STORE";
 
             // Format nội dung chuyển khoản
             var paymentContent = string.IsNullOrWhiteSpace(content) 

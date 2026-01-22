@@ -70,8 +70,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+      <HintPath>..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
@@ -150,7 +151,6 @@
       <DependentUpon>ClothesModels.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Cart.cs" />
- 
     <Compile Include="Models\ClothesModels.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -321,17 +321,11 @@
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Product\Detail.cshtml" />
     <Content Include="Views\Product\Index.cshtml" />
-    <Content Include="Views\Collections\ao.cshtml" />
     <Content Include="Views\Collections\aothun.cshtml" />
     <Content Include="Views\Collections\sweater.cshtml" />
     <Content Include="Views\Collections\quan.cshtml" />
     <Content Include="Views\Collections\quandai.cshtml" />
     <Content Include="Views\Collections\quanngan.cshtml" />
-    <Content Include="Views\Collections\phukien.cshtml" />
-    <Content Include="Views\Collections\walletchain.cshtml" />
-    <Content Include="Views\Collections\kinh.cshtml" />
-    <Content Include="Views\Collections\non.cshtml" />
-    <Content Include="Views\Collections\nhan.cshtml" />
     <Content Include="Views\Collections\Details.cshtml" />
     <Content Include="Views\Collections\Index.cshtml" />
     <Content Include="Views\Favorite\Index.cshtml" />
@@ -342,7 +336,6 @@
     <Content Include="Views\Search\Details.cshtml" />
     <Content Include="Views\Search\Edit.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Views\Collections\test.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Bill\Index.cshtml" />
     <Content Include="Views\Bill\PostBill.cshtml" />
