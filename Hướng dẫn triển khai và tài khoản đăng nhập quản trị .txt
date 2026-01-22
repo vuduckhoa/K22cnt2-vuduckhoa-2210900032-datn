@@ -1,0 +1,3 @@
+Hướng dẫn triển khai:chạy database trên SQL SERVER và sau đó truy cập vào mã nguồn tại file web.config để kết nối với db 
+Tài khoản Admin:admin
+Mật Khẩu:123456
